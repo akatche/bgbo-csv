@@ -61,7 +61,7 @@ class ReputationUploadController extends Controller
     }
 
     private function getOutputData(Batch $batch):array{
-        $headers = [['trans_type','trans_date','trans_time','cust_num','cust_fname','cust_email','cust_phone','sent','sent_by','reason']];
+        $headers = [['trans_type','trans_date','trans_time','cust_num','cust_fname','cust_email','cust_phone','sent','sent_using','reason']];
 
         $data = CustomerReview::where('batch_id',$batch->id)->get()->map(function (CustomerReview $user) {
             return [
@@ -72,7 +72,7 @@ class ReputationUploadController extends Controller
                 $user->original_data['cust_fname'],
                 $user->original_data['cust_email'],
                 $user->original_data['cust_phone'],
-                $user->sent,
+                var_export($user->sent, true),
                 $user->sent_type,
                 $user->reason
             ];
