@@ -73,7 +73,7 @@ const getUpdatedUsers = (user) => {
                     Date
                 </th>
                 <th scope="col" class="px-6 py-3">
-                    Sent By
+                    Sent Using
                 </th>
                 <th scope="col" class="px-6 py-3">
                     Status
