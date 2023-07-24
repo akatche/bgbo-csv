@@ -28,6 +28,7 @@ class NotifyUser implements ShouldBroadcast, ShouldQueue
      */
     public function broadcastOn(): array
     {
+        logger("estoy en notify user");
         return [
             new Channel('customer-review'),
         ];
