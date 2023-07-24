@@ -3,15 +3,18 @@
 import { onMounted, ref } from 'vue'
 import UserStatus from "@/Features/CustomerReview/UserStatus.vue";
 const users = ref([])
-
+import {useToast} from 'vue-toast-notification';
+import 'vue-toast-notification/dist/theme-sugar.css';
+const $toast = useToast();
 const resultsUrl = ref('');
 
 onMounted(() => {
     Echo.channel('customer-review')
         .listen('.review-completed', (e) => {
-            console.log("review completed");
-           console.log(e);
-           resultsUrl.value = e.url;
+            $toast.success('File was successfully processed',{
+                position: 'top-right'
+            });
+            resultsUrl.value = e.url;
         })
         .listen('.user.processed', (e) => {
             users.value.push(e.user);
