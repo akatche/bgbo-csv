@@ -56,7 +56,7 @@ class NotifyUser implements ShouldBroadcast, ShouldQueue
                 'number' => $this->customerReview->customer_number,
                 'date' => $this->customerReview->date->toDateTimeString(),
                 'name' => $this->customerReview->customer_name,
-                'email' => $this->customerReview->customer_email,
+                'email' => $this->customerReview->original_data['cust_email'],
                 'phone' => $this->customerReview->original_data['cust_phone'],
                 'type' => ucfirst($this->customerReview->original_data['trans_type']),
                 'sent_at' => $this->customerReview->sent_at,
