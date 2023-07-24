@@ -45,8 +45,8 @@ class SendReviewMessageToUser implements ShouldQueue
             'date' => Carbon::createFromFormat('Y-m-d H:i:s', sprintf('%s %s',$this->data['trans_date'],$this->data['trans_time'])),
             'customer_number' => $this->data['cust_num'],
             'customer_name' => $this->data['cust_fname'],
-            'customer_email' => $this->data['cust_email'],
-            'customer_phone' => str_replace('-', '', $this->data['cust_phone']),
+            'customer_email' => $this->isValidEmail($this->data['cust_email']) ? $this->data['cust_email'] : null,
+            'customer_phone' => $this->getParsedPhoneNumber($this->data['cust_phone']),
             'sent_type' => $this->selectSentType($this->data),
             'original_data' => $this->data
         ]);
@@ -57,16 +57,20 @@ class SendReviewMessageToUser implements ShouldQueue
     }
 
     private function selectSentType($record) : ?string{
-        if ($record['cust_email'] && $record['cust_phone']) {
+
+        $email = $this->isValidEmail($record['cust_email']);
+        $phone = $this->isValidPhoneNumber($this->getParsedPhoneNumber($this->data['cust_phone']));
+
+        if ($email && $phone) {
             return 'sms';
         }
 
-        if ($record['cust_email']) {
+        if ($phone) {
+            return 'sms';
+        }
+
+        if ($email) {
             return 'email';
-        }
-
-        if ($record['cust_phone']) {
-            return 'sms';
         }
 
         return null;
@@ -102,6 +106,13 @@ class SendReviewMessageToUser implements ShouldQueue
         // This is the date we set to compare all records, is this was in the present I would have used Carbon::now()
         $compareDate = App::runningUnitTests() ? Carbon::now() : Carbon::parse(self::COMPARE_DATE);
 
+        if(is_null($customerReview->customer_phone) && is_null($customerReview->customer_email)){
+            $customerReview->update([
+                'reason' => 'no email or phone'
+            ]);
+            return false;
+        }
+
         if($customerReview->date->diffInDays($compareDate) > self::DAYS_TO_COMPARE){
             $customerReview->update([
                 'reason' => 'beyond days to compare'
@@ -132,5 +143,25 @@ class SendReviewMessageToUser implements ShouldQueue
             ->count();
 
         return $customerReview > 0;
+    }
+
+    private function getParsedPhoneNumber(string $phoneNumber): ?string{
+        //remove all non-numeric characters
+        $phoneNumber = preg_replace('/[^0-9]/', '', $phoneNumber);
+
+        //validate us phone number with 10 digits
+        if($this->isValidPhoneNumber($phoneNumber)){
+            return $phoneNumber;
+        }
+
+        return null;
+    }
+
+    private function isValidPhoneNumber($number) : bool{
+        return (bool) preg_match('/^[0-9]{10}+$/', $number);
+    }
+
+    private function isValidEmail($email) : bool{
+        return filter_var($email, FILTER_VALIDATE_EMAIL);
     }
 }

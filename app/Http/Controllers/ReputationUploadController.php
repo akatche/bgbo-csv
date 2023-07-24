@@ -32,6 +32,7 @@ class ReputationUploadController extends Controller
         // Create a batch instance so every record in this file is linked to the same batch id
         Bus::batch($this->getBatchData($csv))
             ->finally(function (Batch $batch) {
+
                 event(new CustomerListProcessed($this->getOutputCSV($batch)));
             })
             ->dispatch();

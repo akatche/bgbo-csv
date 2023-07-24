@@ -38,6 +38,9 @@ const failureReason = computed(() => {
         case 'beyond days to compare':
             reason = "User can only be notified within 7 days of transaction";
             break;
+        case 'no email or phone':
+            reason = "User doesn't have a valid email or phone number to be notified";
+            break;
     }
 
     return reason;

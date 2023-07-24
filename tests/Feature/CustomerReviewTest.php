@@ -457,6 +457,54 @@ class CustomerReviewTest extends TestCase
         ]);
     }
 
+    public function test_record_with_wrong_phone_format_shouldnt_been_sent(): void
+    {
+        Event::fake();
+
+        Storage::fake('public');
+
+        $header = file_get_contents(base_path('tests/fixtures/customers_headers.csv'));
+        $row = sprintf("sales,%s,13:00:00,10013,Bob,,123456789", now()->format('Y-m-d'));
+        $content = implode("\n", [$header, $row]);
+
+        $file = UploadedFile::fake()->createWithContent('customers.csv', $content);
+
+        $this->postJson('/api/reputation/upload',['users' => $file]);
+
+        $this->assertDatabaseCount('customer_reviews', 1);
+
+        $this->assertDatabaseHas('customer_reviews', [
+            'customer_number' => '10013',
+            'sent' => 0,
+            'reason' => 'no email or phone'
+        ]);
+    }
+
+    public function test_record_with_wrong_email_format_shouldnt_been_sent(): void
+    {
+        Event::fake();
+
+        Storage::fake('public');
+
+        $header = file_get_contents(base_path('tests/fixtures/customers_headers.csv'));
+        $row = sprintf("sales,%s,13:00:00,10013,Bob,bob@gmail,com,", now()->format('Y-m-d'));
+        $content = implode("\n", [$header, $row]);
+
+        $file = UploadedFile::fake()->createWithContent('customers.csv', $content);
+
+        $this->postJson('/api/reputation/upload',['users' => $file]);
+
+        $this->assertDatabaseCount('customer_reviews', 1);
+
+        $this->assertDatabaseHas('customer_reviews', [
+            'customer_number' => '10013',
+            'sent' => 0,
+            'reason' => 'no email or phone'
+        ]);
+    }
+
+
+
     public function test_records_with_same_email_should_only_be_sent_once(): void
     {
         Event::fake();
