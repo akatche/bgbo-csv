@@ -134,12 +134,23 @@ class SendReviewMessageToUser implements ShouldQueue
     {
         // find unique records with the same email, phone or customer number where sent is true
         $customerReview = CustomerReview::where(function ($query) use ($customerReview) {
-            $query->where('customer_email', $customerReview->customer_email)
+            if(is_null($customerReview->customer_email)){
+                return $query->where('customer_phone', $customerReview->customer_phone)
+                    ->orWhere('customer_number', $customerReview->customer_number);
+            }
+
+            if(is_null($customerReview->customer_phone)){
+                return $query->where('customer_email', $customerReview->customer_email)
+                    ->orWhere('customer_number', $customerReview->customer_number);
+            }
+
+            return $query->where('customer_email', $customerReview->customer_email)
                 ->orWhere('customer_phone', $customerReview->customer_phone)
                 ->orWhere('customer_number', $customerReview->customer_number);
         })
             ->where('batch_id', $customerReview->batch_id)
             ->where('sent', true)
+            ->where('id', '!=', $customerReview->id)
             ->count();
 
         return $customerReview > 0;
