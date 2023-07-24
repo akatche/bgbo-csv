@@ -13,6 +13,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Bus\Batchable;
+use Illuminate\Support\Facades\App;
 
 class SendReviewMessageToUser implements ShouldQueue
 {
@@ -49,8 +50,6 @@ class SendReviewMessageToUser implements ShouldQueue
             'sent_type' => $this->selectSentType($this->data),
             'original_data' => $this->data
         ]);
-
-//        logger("llegue al job");
 
         event(new NotifyUser($customerReview));
 
@@ -101,7 +100,7 @@ class SendReviewMessageToUser implements ShouldQueue
     private function canUserBeNotified(CustomerReview $customerReview): bool{
 
         // This is the date we set to compare all records, is this was in the present I would have used Carbon::now()
-        $compareDate = Carbon::parse(self::COMPARE_DATE);
+        $compareDate = App::runningUnitTests() ? Carbon::now() : Carbon::parse(self::COMPARE_DATE);
 
         if($customerReview->date->diffInDays($compareDate) > self::DAYS_TO_COMPARE){
             $customerReview->update([

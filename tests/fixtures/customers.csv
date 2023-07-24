@@ -1,0 +1,11 @@
+trans_type,trans_date,trans_time,cust_num,cust_fname,cust_email,cust_phone
+sales,2023-03-01,13:00:00,10012,Bob,bob1@gmail.com,123-123-1234
+service,2023-03-01,14:00:00,10013,Bob,bob2@gmail.com,123-234-2345
+sales,2023-03-01,11:20:00,10012,Bobby,bob@gmail.com,123-122-1223
+sales,2023-03-01,16:00:00,10014,Robert,,123568556
+sales,2023-03-02,17:30:00,10015,Jill,"jill@gmail,com",
+service,2023-03-02,18:00:00,10016,Jillian,,224-225-2228
+service,2023-03-01,19:00:00,10017,Jane,jane@gmail,111-222-3333
+sales,2023-02-27,20:00:00,10018,Jacob,,
+service,2023-01-02,21:00:00,10019,Jerri Sanders,,5526691245
+service,2023-03-04,14:00:00,10020,Bobby,bob@gmail.com,123-122-1223

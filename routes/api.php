@@ -15,4 +15,4 @@ use App\Http\Controllers\ReputationUploadController;
 |
 */
 
-Route::post('/reputation/upload', ReputationUploadController::class)->name('profile.edit');
+Route::post('/reputation/upload', ReputationUploadController::class)->name('reputation.upload');

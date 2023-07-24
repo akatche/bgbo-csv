@@ -2,6 +2,8 @@
 
 namespace App\Services\Notification;
 
+use Illuminate\Support\Facades\App;
+
 class Notification
 {
     public function send($notificationType, $data): void
@@ -15,12 +17,16 @@ class Notification
     public function sendSms(array $data): void
     {
         // This sleep is to simulate the time it takes to send an sms
-        sleep(2);
+        if (!App::runningUnitTests()){
+            sleep(2);
+        }
     }
 
     public function sendEmail(array $data): void
     {
         // This sleep is to simulate the time it takes to send an email
-        sleep(1);
+        if (!App::runningUnitTests()){
+            sleep(1);
+        }
     }
 }
