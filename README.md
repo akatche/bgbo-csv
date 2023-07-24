@@ -22,3 +22,9 @@ Finally, the election of Soketi is because I wanted to try it out. I have used L
 ## Design Decisions
 I tried to replicate the color structure that you have on your main website. I also tried to make the UI as simple as possible.
 And one addon that I did was to add the results logger visually and with real-time updates on its sending status.
+
+## Testing
+I have added tests that covers the main features of the app. They can be triggered by running the following command on the root of the project with Laravel Sail Installed.
+```
+./vendor/bin/sail artisan test
+```
