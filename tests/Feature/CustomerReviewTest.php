@@ -503,8 +503,6 @@ class CustomerReviewTest extends TestCase
         ]);
     }
 
-
-
     public function test_records_with_same_email_should_only_be_sent_once(): void
     {
         Event::fake();
