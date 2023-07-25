@@ -24,7 +24,7 @@ class CsvHeaders implements ValidationRule
         $reader->setHeaderOffset(0);
 
         if ($reader->getHeader() !== $this->headers) {
-            $fail('The :attribute has the wrong headers');
+            $fail('The :attribute has the wrong header structure.');
         }
     }
 }

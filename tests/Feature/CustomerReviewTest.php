@@ -65,6 +65,24 @@ class CustomerReviewTest extends TestCase
             ]);
     }
 
+    public function test_users_list_should_have_a_correct_header_structure(): void
+    {
+        $header = 'trans_type,trans_date,trans_time,cust_num,cust_fname,cust_email';
+        $row1 = sprintf("sales,%s,13:00:00,10013,Bob,bob@gmail.com,123-123-1231", now()->format('Y-m-d'));
+        $row2 = sprintf("sales,%s,13:00:00,10013,Bob,bob@gmail.com,123-123-1231", now()->format('Y-m-d'));
+        $content = implode("\n", [$header, $row1,$row2]);
+
+        $file = UploadedFile::fake()->createWithContent('customers.csv', $content);
+
+        $response = $this->postJson('/api/reputation/upload',['users' => $file]);
+
+        $response
+            ->assertStatus(422)
+            ->assertInvalid([
+                'users' => 'The users has the wrong header structure.',
+            ]);
+    }
+
     public function test_that_jobs_were_added_into_the_batch(): void
     {
         Bus::fake();
