@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\CsvHeaders;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ReputationRequest extends FormRequest
@@ -22,7 +23,13 @@ class ReputationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'users' => 'required|file|mimes:csv'
+            'users' => [
+                'bail',
+                'required',
+                'file',
+                'mimes:csv',
+                new CsvHeaders(['trans_type','trans_date','trans_time','cust_num','cust_fname','cust_email','cust_phone'])
+            ]
         ];
     }
 }

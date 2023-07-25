@@ -113,7 +113,7 @@ class SendReviewMessageToUser implements ShouldQueue
             return false;
         }
 
-        if($customerReview->date->diffInDays($compareDate) > self::DAYS_TO_COMPARE){
+        if($customerReview->date->diffInDays($compareDate) >= self::DAYS_TO_COMPARE){
             $customerReview->update([
                 'reason' => 'beyond days to compare'
             ]);

@@ -265,6 +265,8 @@ class CustomerReviewTest extends TestCase
 
         $this->postJson('/api/reputation/upload',['users' => $file]);
 
+
+
         Event::assertDispatched(function (CustomerListProcessed $event) use($date) {
             $filename = 'public/' . explode('/', $event->broadcastWith()['url'])[2];
             $reader = Reader::createFromString(Storage::disk('local')->get($filename));
